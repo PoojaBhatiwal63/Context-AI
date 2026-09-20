@@ -1,12 +1,12 @@
 import os
 import streamlit as st
 from PyPDF2 import PdfReader
-from langchain.embeddings import HuggingFaceEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.document_loaders import PyPDFLoader
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.chains import RetrievalQA
-from langchain.llms import Ollama
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_community.vectorstores import FAISS
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_text_splitters import CharacterTextSplitter
+from langchain_classic.chains import RetrievalQA
+from langchain_ollama import OllamaLLM
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -56,7 +56,7 @@ def load_vector_store(db_path):
 # Create QA chain with Ollama LLaMA 2
 def get_qa_chain(vector_store):
     retriever = vector_store.as_retriever(search_kwargs={"k": 3})
-    llm = Ollama(model="llama2")  # Run `ollama run llama2` beforehand
+    llm = OllamaLLM(model="llama2")  # Run `ollama run llama2` beforehand
     return RetrievalQA.from_chain_type(llm=llm, retriever=retriever, chain_type="stuff")
 
 # --- STREAMLIT APP ---
